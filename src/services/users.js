@@ -29,3 +29,8 @@ export function create(values) {
     body: JSON.stringify(reqData),
   });
 }
+
+
+export function getAllRoles() {
+  return request('/api/role');
+}

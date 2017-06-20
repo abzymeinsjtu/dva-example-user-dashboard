@@ -11,7 +11,7 @@ import UserPasswordModal from './UserPasswordModal';
 const Search = Input.Search;
 
 
-function Users({ dispatch, list: dataSource, loading, total, q, page: current }) {
+function Users({ dispatch, list: dataSource, loading, total, q, page: current, allRoles }) {
   function pageChangeHandler(page) {
     dispatch(routerRedux.push({
       pathname: '/users',
@@ -78,7 +78,7 @@ function Users({ dispatch, list: dataSource, loading, total, q, page: current })
       key: 'operation',
       render: (text, record) => (
         <span className={styles.operation}>
-          <UserModal record={record} onOk={editHandler.bind(null, record.id)}>
+          <UserModal record={record} onOk={editHandler.bind(null, record.id)} allRoles={allRoles}>
             <a>编辑</a>
           </UserModal>
           <span className="ant-divider" />
@@ -104,7 +104,7 @@ function Users({ dispatch, list: dataSource, loading, total, q, page: current })
           />
           <br />
           <br />
-          <UserModal record={{ roles: [] }} onOk={createHandler}>
+          <UserModal record={{ roles: [] }} onOk={createHandler} allRoles={allRoles}>
             <Button type="primary">新建用户</Button>
           </UserModal>
         </div>
@@ -128,13 +128,15 @@ function Users({ dispatch, list: dataSource, loading, total, q, page: current })
 }
 
 function mapStateToProps(state) {
-  const { list, total, page, q } = state.users;
+  const { list, total, page, q, allRoles } = state.users;
+
   return {
     loading: state.loading.models.users,
     list,
     total,
     page,
     q,
+    allRoles,
   };
 }
 

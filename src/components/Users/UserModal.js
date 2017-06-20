@@ -88,9 +88,17 @@ class UserEditModal extends Component {
                 initialValue: roles.map((role) => { return role.id.toString(); }),
               })(
                 <Select mode="multiple" placeholder="Please select roles">
-                  <Option key="系统管理员" value="1">系统管理员</Option>
-                  <Option key="AM" value="2">AM</Option>
-                  <Option key="SPM" value="3">SPM</Option>
+                  {
+                    this.props.allRoles.map(
+                      (role) => {
+                        return (
+                          <Option key={role.name} value={role.id.toString()}>
+                            {role.name}
+                          </Option>
+                        );
+                      },
+                    )
+                  }
                 </Select>,
               )}
             </FormItem>

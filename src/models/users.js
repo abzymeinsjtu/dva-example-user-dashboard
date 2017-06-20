@@ -4,19 +4,26 @@ import * as usersService from '../services/users';
 export default {
   namespace: 'users',
   state: {
-    list: [],
     total: null,
     page: null,
     q: '',
+    list: [],
+    allRoles: [],
   },
   reducers: {
-    save(state, { payload: { data: list, total, page, q } }) {
-      return { ...state, list, total, page, q };
+    save(state, { payload: { data: list, total, page, q, allRoles } }) {
+      return { ...state, list, total, page, q, allRoles };
     },
   },
   effects: {
-    *fetch({ payload: { page = 1, q = '' } }, { call, put }) {
+    *fetch({ payload: { page = 1, q = '' } }, { select, call, put }) {
       const data = yield call(usersService.fetch, { page, q });
+      let allRoles = yield select(state => state.users.allRoles);
+
+      if (!allRoles.length) {
+        const rawAllRoles = yield call(usersService.getAllRoles);
+        allRoles = rawAllRoles.data;
+      }
       yield put({
         type: 'save',
         payload: {
@@ -24,6 +31,7 @@ export default {
           total: data.total,
           page: parseInt(page, 10),
           q,
+          allRoles,
         },
       });
     },
