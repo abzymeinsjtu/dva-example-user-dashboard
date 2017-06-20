@@ -23,8 +23,9 @@ export function modifyPassword(id, password) {
 }
 
 export function create(values) {
-  return request('/api/users/add', {
+  const reqData = { ...values, password: '123456' };
+  return request('/api/user/add', {
     method: 'POST',
-    body: JSON.stringify(values),
+    body: JSON.stringify(reqData),
   });
 }

@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import * as usersService from '../services/users';
 
 export default {
@@ -25,14 +26,34 @@ export default {
       });
     },
     *update({ payload: { id, values } }, { call, put }) {
-      yield call(usersService.update, id, values);
+      const ret = yield call(usersService.update, id, values);
+
+      if (ret.error_code !== 0) {
+        message.error(ret.msg, 2);
+      } else {
+        message.success('更新用户成功', 2);
+      }
+
       yield put({ type: 'reload' });
     },
     *modifyPassword({ payload: { id, password } }, { call }) {
-      yield call(usersService.modifyPassword, id, password);
+      const ret = yield call(usersService.modifyPassword, id, password);
+
+      if (ret.error_code !== 0) {
+        message.error(ret.msg, 2);
+      } else {
+        message.success('修改密码成功', 2);
+      }
     },
     *create({ payload: values }, { call, put }) {
-      yield call(usersService.create, values);
+      const ret = yield call(usersService.create, values);
+
+      if (ret.error_code !== 0) {
+        message.error(ret.msg, 2);
+      } else {
+        message.success('新建用户成功', 2);
+      }
+
       yield put({ type: 'reload' });
     },
     *reload(action, { put, select }) {
