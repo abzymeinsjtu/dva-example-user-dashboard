@@ -23,6 +23,7 @@ export default {
           data: data.data,
           total: data.total,
           page: parseInt(page, 10),
+          q,
         },
       });
     },
