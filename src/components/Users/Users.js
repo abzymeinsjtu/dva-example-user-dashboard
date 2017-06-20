@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Pagination, Button } from 'antd';
+import { Table, Pagination, Button, Input } from 'antd';
 import { routerRedux } from 'dva/router';
 import styles from './Users.css';
 import { PAGE_SIZE } from '../../constants';
@@ -8,11 +8,21 @@ import UserModal from './UserModal';
 import UserPasswordModal from './UserPasswordModal';
 
 
-function Users({ dispatch, list: dataSource, loading, total, page: current }) {
+const Search = Input.Search;
+
+
+function Users({ dispatch, list: dataSource, loading, total, q, page: current }) {
   function pageChangeHandler(page) {
     dispatch(routerRedux.push({
       pathname: '/users',
-      query: { page },
+      query: { q, page },
+    }));
+  }
+
+  function searchHandler(queryString) {
+    dispatch(routerRedux.push({
+      pathname: '/users',
+      query: { q: queryString, page: current },
     }));
   }
 
@@ -87,6 +97,13 @@ function Users({ dispatch, list: dataSource, loading, total, page: current }) {
     <div className={styles.normal}>
       <div>
         <div className={styles.create}>
+          <Search
+            style={{ width: 200 }}
+            onSearch={searchHandler}
+            defaultValue={q}
+          />
+          <br />
+          <br />
           <UserModal record={{ roles: [] }} onOk={createHandler}>
             <Button type="primary">新建用户</Button>
           </UserModal>
@@ -111,12 +128,13 @@ function Users({ dispatch, list: dataSource, loading, total, page: current }) {
 }
 
 function mapStateToProps(state) {
-  const { list, total, page } = state.users;
+  const { list, total, page, q } = state.users;
   return {
     loading: state.loading.models.users,
     list,
     total,
     page,
+    q,
   };
 }
 

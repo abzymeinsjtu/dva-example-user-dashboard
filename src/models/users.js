@@ -7,15 +7,16 @@ export default {
     list: [],
     total: null,
     page: null,
+    q: '',
   },
   reducers: {
-    save(state, { payload: { data: list, total, page } }) {
-      return { ...state, list, total, page };
+    save(state, { payload: { data: list, total, page, q } }) {
+      return { ...state, list, total, page, q };
     },
   },
   effects: {
-    *fetch({ payload: { page = 1 } }, { call, put }) {
-      const data = yield call(usersService.fetch, { page });
+    *fetch({ payload: { page = 1, q = '' } }, { call, put }) {
+      const data = yield call(usersService.fetch, { page, q });
       yield put({
         type: 'save',
         payload: {
@@ -58,7 +59,8 @@ export default {
     },
     *reload(action, { put, select }) {
       const page = yield select(state => state.users.page);
-      yield put({ type: 'fetch', payload: { page } });
+      const q = yield select(state => state.users.q);
+      yield put({ type: 'fetch', payload: { page, q } });
     },
   },
   subscriptions: {

@@ -1,8 +1,8 @@
 import request from '../utils/request';
 import { PAGE_SIZE } from '../constants';
 
-export function fetch({ page }) {
-  return request(`/api/user?page=${page}&per_page=${PAGE_SIZE}`);
+export function fetch({ page, q }) {
+  return request(`/api/user?page=${page}&per_page=${PAGE_SIZE}&q=${q}`);
 }
 
 
