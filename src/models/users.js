@@ -14,23 +14,22 @@ export default {
   },
   effects: {
     *fetch({ payload: { page = 1 } }, { call, put }) {
-      const { data, headers } = yield call(usersService.fetch, { page });
+      const data = yield call(usersService.fetch, { page });
       yield put({
         type: 'save',
         payload: {
-          data,
-          total: parseInt(headers['x-total-count'], 10),
+          data: data.data,
+          total: data.total,
           page: parseInt(page, 10),
         },
       });
     },
-    *remove({ payload: id }, { call, put }) {
-      yield call(usersService.remove, id);
+    *update({ payload: { id, values } }, { call, put }) {
+      yield call(usersService.update, id, values);
       yield put({ type: 'reload' });
     },
-    *patch({ payload: { id, values } }, { call, put }) {
-      yield call(usersService.patch, id, values);
-      yield put({ type: 'reload' });
+    *modifyPassword({ payload: { id, password } }, { call }) {
+      yield call(usersService.modifyPassword, id, password);
     },
     *create({ payload: values }, { call, put }) {
       yield call(usersService.create, values);

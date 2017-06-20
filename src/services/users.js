@@ -2,24 +2,28 @@ import request from '../utils/request';
 import { PAGE_SIZE } from '../constants';
 
 export function fetch({ page }) {
-  return request(`/api/users?_page=${page}&_limit=${PAGE_SIZE}`);
+  return request(`/api/user?page=${page}&per_page=${PAGE_SIZE}`);
 }
 
-export function remove(id) {
-  return request(`/api/users/${id}`, {
-    method: 'DELETE',
+
+export function update(id, values) {
+  const reqData = { ...values, user_id: id };
+  return request('/api/user/update', {
+    method: 'POST',
+    body: JSON.stringify(reqData),
   });
 }
 
-export function patch(id, values) {
-  return request(`/api/users/${id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(values),
+export function modifyPassword(id, password) {
+  const reqData = { user_id: id, password };
+  return request('/api/user/force_modify_password', {
+    method: 'POST',
+    body: JSON.stringify(reqData),
   });
 }
 
 export function create(values) {
-  return request('/api/users', {
+  return request('/api/users/add', {
     method: 'POST',
     body: JSON.stringify(values),
   });

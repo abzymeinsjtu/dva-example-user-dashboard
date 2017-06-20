@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 class UserEditModal extends Component {
 
@@ -38,7 +39,7 @@ class UserEditModal extends Component {
   render() {
     const { children } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { name, email, website } = this.props.record;
+    const { name, email, roles } = this.props.record;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -50,7 +51,7 @@ class UserEditModal extends Component {
           { children }
         </span>
         <Modal
-          title="Edit User"
+          title="编辑用户"
           visible={this.state.visible}
           onOk={this.okHandler}
           onCancel={this.hideModelHandler}
@@ -58,7 +59,7 @@ class UserEditModal extends Component {
           <Form horizontal onSubmit={this.okHandler}>
             <FormItem
               {...formItemLayout}
-              label="Name"
+              label="姓名"
             >
               {
                 getFieldDecorator('name', {
@@ -68,7 +69,7 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="Email"
+              label="邮箱"
             >
               {
                 getFieldDecorator('email', {
@@ -78,13 +79,20 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="Website"
+              label="角色"
             >
-              {
-                getFieldDecorator('website', {
-                  initialValue: website,
-                })(<Input />)
-              }
+              {getFieldDecorator('roles', {
+                rules: [
+                  { message: '请添加用户角色', type: 'array' },
+                ],
+                initialValue: roles.map((role) => { return role.id.toString(); }),
+              })(
+                <Select mode="multiple" placeholder="Please select roles">
+                  <Option key="系统管理员" value="1">系统管理员</Option>
+                  <Option key="AM" value="2">AM</Option>
+                  <Option key="SPM" value="3">SPM</Option>
+                </Select>,
+              )}
             </FormItem>
           </Form>
         </Modal>
